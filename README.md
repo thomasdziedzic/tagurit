@@ -22,5 +22,5 @@ Example **~/.tagurit/urls**
 ===========================
 ```
 # this is a comment
-git@github.com:gostrc/tagurit.git
+git://github.com/gostrc/tagurit.git
 ```
