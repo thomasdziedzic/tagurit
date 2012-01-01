@@ -7,6 +7,8 @@ Dependencies
 
 The above are only required if you watch for new tags in those types of repositories.
 
+Warning, due to hg's limitations, tagurit will have to keep a copy of all hg repositories in a local folder.
+
 Installing
 ==========
 ```tagurit``` is available as a gem at https://rubygems.org/gems/tagurit
@@ -25,6 +27,8 @@ Files
 **~/.tagurit/urls** - repos to watch for new tags
 
 **~/.tagurit/cache** - a serialized ruby object containing previously seen tags for known repos.
+
+**~/.tagurit/hg** - folder where local copies of hg clones are stored, since you can only query with hg tags locally.
 
 Format for **~/.tagurit/urls**
 ==============================
