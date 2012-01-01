@@ -7,6 +7,12 @@ Dependencies
 
 The above are only required if you watch for new tags in those types of repositories.
 
+Installing
+==========
+```tagurit``` is available as a gem at https://rubygems.org/gems/tagurit
+
+To install it using gem, issue the following command: ```gem install tagurit```
+
 Setup
 =====
 You need to create a file **~/.tagurit/urls** which contains a list of urls to watch for new tags.
