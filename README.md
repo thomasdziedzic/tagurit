@@ -3,6 +3,7 @@ Dependencies
 * ruby
 * git (optional)
 * svn (optional)
+* hg (optional)
 
 The above are only required if you watch for new tags in those types of repositories.
 
@@ -24,7 +25,7 @@ Format for **~/.tagurit/urls**
 
 Lines beginning with ```#``` are ignored.
 
-Lines beginning with ```#~``` followed by either ```git``` or ```svn``` tell the parser that all urls that follow should be treated as the type specified. Default is ``#~git``.
+Lines beginning with ```#~``` followed by either ```git```, ```svn```, or ```hg``` tell the parser that all urls that follow should be treated as the type specified. Default is ``#~git``.
 
 Empty lines are ignored.
 
@@ -39,4 +40,7 @@ git://github.com/gostrc/tagurit.git
 # the next line starts the svn repos section
 #~svn
 http://svn.apache.org/repos/asf/subversion/tags/
+
+#~hg
+https://bitbucket.org/bobf/bpython/
 ```
