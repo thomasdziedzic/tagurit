@@ -6,7 +6,10 @@ Gem::Specification.new do |s|
   s.description = "Watches multiple types of VCS repositories for new tags."
   s.authors     = ["Thomas Dziedzic"]
   s.email       = "gostrc@gmail.com"
-  s.files       = ["lib/url_parser.rb"]
+  s.files       = [
+		   "lib/url_parser.rb",
+		   "lib/tag_fetcher.rb",
+		  ]
   s.executables << "tagurit"
   s.homepage    = "https://github.com/gostrc/tagurit"
 end
