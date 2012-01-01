@@ -3,10 +3,12 @@
 require "set"
 require "yaml"
 
+require "url_parser"
+
 # files used:
 #   ~/.tagurit
 #   ~/.tagurit/cache - serialized ruby object to represent a cache of previous tags
-#   ~/.tagurit/urls - list of git repository urls to watch for new tags
+#   ~/.tagurit/urls - list of repository urls to watch for new tags
 base_dir = File.join Dir.home, ".tagurit"
 urls_path = File.join base_dir, "urls"
 cache_path = File.join base_dir, "cache"
@@ -15,9 +17,8 @@ cache_path = File.join base_dir, "cache"
 Dir.mkdir base_dir unless File.directory? base_dir
 
 # read the urls
-git_urls = []
 begin
-  File.open(urls_path).each {|line| git_urls.push line.chomp unless line.match(/^#/)}
+  vcs_urls = URLParser.parse(File.open(urls_path).read)
 rescue Errno::ENOENT
   puts "you must create %s" % urls_path
   puts "each line must be a url"
@@ -34,22 +35,36 @@ end
 
 # create a new cache
 new_cache = {}
-git_urls.each do |git_url|
-  # fetch tags
-  raw_tags = `git ls-remote --tags #{git_url}`
-  # cleanup tags by removing extra data before the tag name
-  processed_tags = raw_tags.split("\n").map {|raw_tag| raw_tag.split("/")[-1]}
-  # cleanup tags which end with ^{}
-  processed_tags.reject! {|tag| tag[-3, 3] == "^{}"}
-  # set the url to point to the list of tags available
-  new_cache[git_url] = processed_tags
+vcs_urls.each do |vcs_type, urls|
+  urls.each do |url|
+    processed_tags = []
+
+    # fetch tags
+    if vcs_type == :git
+      raw_tags = `git ls-remote --tags #{url}`
+
+      # cleanup tags by removing extra data before the tag name
+      processed_tags = raw_tags.split("\n").map {|raw_tag| raw_tag.split("/")[-1]}
+
+      # cleanup tags which end with ^{}
+      processed_tags.reject! {|tag| tag[-3, 3] == "^{}"}
+    elsif vcs_type == :svn
+      raw_tags = `svn ls #{url}`
+
+      # only remove the following "/" from the tag directory
+      processed_tags = raw_tags.split("\n").map {|raw_tag| raw_tag.split("/")[0]}
+    end
+
+    # set the url to point to the list of tags available
+    new_cache[url] = processed_tags
+  end
 end
 
 # compare the new with the old
 new_cache.each do |url, tags|
   # check if the url exists in the old cache
   unless old_cache.has_key? url
-    puts "new git repo: #{url}"
+    puts "new repo: #{url}"
     next
   end
 
