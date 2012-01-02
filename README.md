@@ -1,3 +1,14 @@
+Use cases
+=========
+I personally use tagurit to check for new versions of packages that I maintain.
+
+Before writing tagurit, I used to watch web pages for changes using a program to check for newer versions.
+Although this method usually worked, sometimes the websites would lag behind the repositories.
+Other times, there were lots of false positives cause by dynamic web pages where you had to write a custom filter per page to eliminate false positives.
+
+There are still times where you still can not use tagurit, for instance if the repository doesn't use tags, or if the repository isn't publicly available.
+For those situations, you still have to watch the websites for changes.
+
 Dependencies
 ============
 * ruby
@@ -28,7 +39,7 @@ Files
 
 **~/.tagurit/cache** - a serialized ruby object containing previously seen tags for known repos.
 
-**~/.tagurit/hg** - folder where local copies of hg clones are stored, since you can only query with hg tags locally.
+**~/.tagurit/hg/** - folder where local copies of hg clones are stored, since you can only query with hg tags locally.
 
 Format for **~/.tagurit/urls**
 ==============================
