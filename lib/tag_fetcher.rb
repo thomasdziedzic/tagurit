@@ -7,12 +7,16 @@ class TagFetcher
 
       urls.each do |url|
 	raw_tags = `git ls-remote --tags #{url}`
+	if $?.success?
+	  # cleanup tags by removing extra data before the tag name
+	  processed_tags = raw_tags.split("\n").map {|raw_tag| raw_tag.split("/")[-1]}
 
-	# cleanup tags by removing extra data before the tag name
-	processed_tags = raw_tags.split("\n").map {|raw_tag| raw_tag.split("/")[-1]}
-
-	# cleanup tags which end with ^{}
-	processed_tags.reject! {|tag| tag[-3, 3] == "^{}"}
+	  # cleanup tags which end with ^{}
+	  processed_tags.reject! {|tag| tag[-3, 3] == "^{}"}
+	else
+	  puts "failed to retrieve git repo tags from : #{url}"
+	  processed_tags = [:failed]
+	end
 
 	new_cache[url] = processed_tags
       end
@@ -25,9 +29,13 @@ class TagFetcher
 
       urls.each do |url|
 	raw_tags = `svn ls #{url}`
-
-	# only remove the following "/" from the tag directory
-	processed_tags = raw_tags.split("\n").map {|raw_tag| raw_tag.split("/")[0]}
+	if $?.success?
+	  # only remove the following "/" from the tag directory
+	  processed_tags = raw_tags.split("\n").map {|raw_tag| raw_tag.split("/")[0]}
+	else
+	  puts "failed to retrieve svn repo tags from: #{url}"
+	  processed_tags = [:failed]
+	end
 
 	new_cache[url] = processed_tags
       end
@@ -56,11 +64,16 @@ class TagFetcher
 	else
 	  `hg clone #{url} #{local_path} 2> /dev/null`
 	end
+	if $?.success?
+	  raw_tags = `hg tags -R #{local_path}`
 
-	raw_tags = `hg tags -R #{local_path}`
+	  # only remove the following "/" from the tag directory
+	  processed_tags = raw_tags.split("\n").map {|raw_tag| raw_tag.split[0]}
+	else
+	  puts "failed to retrieve hg repo: #{url}"
+	  processed_tags = [:failed]
+	end
 
-	# only remove the following "/" from the tag directory
-	processed_tags = raw_tags.split("\n").map {|raw_tag| raw_tag.split[0]}
 
 	new_cache[url] = processed_tags
       end

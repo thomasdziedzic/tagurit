@@ -49,6 +49,15 @@ end
 
 # compare the new with the old
 new_cache.each do |url, tags|
+  if tags == [:failed]
+    if old_cache.has_key? url
+      # if failed, try to use the old_cache keys to preserve them for the next run
+      new_cache[url] = old_cache[url]
+    else
+      new_cache[url] = []
+    end
+  end
+
   # check if the url exists in the old cache
   unless old_cache.has_key? url
     puts "new repo: #{url}"
