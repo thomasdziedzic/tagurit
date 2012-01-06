@@ -18,7 +18,8 @@ class URLParser
       next if line.match /^\s*$/
 
       # everything else is considered a url
-      urls[repo_state] << line.chomp
+      # remove whitespace before and after the string to clean it up
+      urls[repo_state] << line.strip
     end
 
     urls

@@ -11,9 +11,6 @@ class TagFetcher
     new_cache = {}
 
     @urls.each do |url|
-      # remove whitespace before and after the string to clean it up
-      url.strip!
-
       begin
 	raw_tags = fetch_tags url
       rescue TagFetchError
