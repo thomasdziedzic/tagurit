@@ -38,12 +38,15 @@ end
 new_cache = {}
 vcs_urls.each do |vcs_type, urls|
   if vcs_type == :git
-    new_cache.merge!(TagFetcher.git(urls))
+    git = GitTagFetcher.new urls
+    new_cache.merge! git.fetch
   elsif vcs_type == :svn
-    new_cache.merge!(TagFetcher.svn(urls))
+    svn = SvnTagFetcher.new urls
+    new_cache.merge! svn.fetch
   elsif vcs_type == :hg
     hg_path = File.join base_dir, "hg"
-    new_cache.merge!(TagFetcher.hg(urls, hg_path))
+    hg = HgTagFetcher.new urls, hg_path
+    new_cache.merge! hg.fetch
   end
 end
 
