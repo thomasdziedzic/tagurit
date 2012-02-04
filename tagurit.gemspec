@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = "tagurit"
-  s.version     = "0.3"
+  s.version     = "0.4"
   s.summary     = "Version control system, tag watcher."
   s.description = "Watches multiple types of VCS repositories for new tags."
   s.authors     = ["Thomas Dziedzic"]
