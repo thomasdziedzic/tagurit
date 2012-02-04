@@ -91,11 +91,12 @@ class HgTagFetcher < TagFetcher
 
     # if the directory doesn't exist, clone it first, otherwise pull upstream changes
     if File.directory? local_path
-      `hg pull -u -R #{local_path} 2> /dev/null`
+      `hg pull -u -R #{local_path}`
     else
-      `hg clone #{url} #{local_path} 2> /dev/null`
+      `hg clone #{url} #{local_path}`
+      # put this here since hg returns a 1 when it didn't pull anything (no changes)
+      raise TagFetchError unless $?.success?
     end
-    raise TagFetchError unless $?.success?
     raw_tags = `hg tags -R #{local_path}`
     raw_tags
   end
